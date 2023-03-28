@@ -12,9 +12,8 @@ env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 jobs:
-  fly_deployment_pipeline:
+  deployment_pipeline:
     runs-on: ubuntu-20.04
-    if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -36,6 +35,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy app to fly.io
         # if: ${{ !contain(github.event.commits.*.message, '#skip') }}
+        if: ${{ github.event_name == 'push' }}
         run: flyctl deploy --remote-only
   tag_release:
     needs: [fly_deployment_pipeline]
@@ -48,5 +48,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: 'patch'
+          INITIAL_VERSION: '0.1.0'
           WITH_V: true
           DRY_RUN: true
