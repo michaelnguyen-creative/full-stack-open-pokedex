@@ -34,11 +34,10 @@ jobs:
           wait-on: http://localhost:8080
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy app to fly.io
-        # if: ${{ !contain(github.event.commits.*.message, '#skip') }}
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && !contain(github.event.commits.*.message, '#skip') }}
         run: flyctl deploy --remote-only
   tag_release:
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' && !contain(github.event.commits.*.message, '#skip') }}
     needs: [linting_testing_deployment]
     runs-on: ubuntu-20.04
     steps:
