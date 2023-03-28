@@ -38,7 +38,7 @@ jobs:
         if: ${{ github.event_name == 'push' }}
         run: flyctl deploy --remote-only
   tag_release:
-    needs: [fly_deployment_pipeline]
+    needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
