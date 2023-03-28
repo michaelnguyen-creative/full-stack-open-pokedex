@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    type: [opened, synchronize]
+    branches:
+      - master
 
 jobs:
   a_test_job:
