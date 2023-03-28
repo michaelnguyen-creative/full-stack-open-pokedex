@@ -12,7 +12,7 @@ env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 jobs:
-  deployment_pipeline:
+  linting_testing_deployment:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -39,7 +39,7 @@ jobs:
         run: flyctl deploy --remote-only
   tag_release:
     if: ${{ github.event_name == 'push' }}
-    needs: [deployment_pipeline]
+    needs: [linting_testing_deployment]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -51,4 +51,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: 'patch'
           WITH_V: true
-          DRY_RUN: true
+          # DRY_RUN: true
