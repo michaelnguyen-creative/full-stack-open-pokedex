@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    type: [opened, synchronize]
+    branches:
+      - master
 
 jobs:
   a_test_job:
@@ -21,4 +25,4 @@ jobs:
       - name: commit messages
         env:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-        run: echo `COMMIT_MESSAGES`
+        run: echo "$COMMIT_MESSAGES"
