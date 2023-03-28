@@ -35,6 +35,7 @@ jobs:
           wait-on: http://localhost:8080
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy app to fly.io
+        # if: ${{ !contain(github.event.commits.*.message, '#skip') }}
         run: flyctl deploy --remote-only
   tag_release:
     needs: [fly_deployment_pipeline]
