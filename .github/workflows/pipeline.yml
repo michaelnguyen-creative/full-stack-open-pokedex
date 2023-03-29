@@ -8,8 +8,6 @@ on:
     branches: [master]
     types: [opened, synchronize]
 
-
-
 jobs:
   linting_testing_deployment:
     runs-on: ubuntu-20.04
@@ -37,20 +35,13 @@ jobs:
         run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      # Discord notif: failure
       - name: On build failure
         if: ${{ failure() }}
         uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
         with:
           text: Build failed
           severity: error
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: On deployment pipeline success
-        if: ${{ github.event_name == 'push' && success() }}
-        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
-        with:
-          severity: info
-          text: Successfully deployed a new Pokedex version
-          description: to https://sparkling-dream-9673.fly.dev by michaelnguyen
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   tag_release:
     needs: [linting_testing_deployment]
@@ -66,4 +57,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: 'patch'
           WITH_V: true
-          # DRY_RUN: true
+      # Discord notif: success
+      - name: On deployment pipeline success
+        if: ${{ success() }}
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        with:
+          severity: info
+          text: Successfully deployed a new Pokedex version
+          description: to https://sparkling-dream-9673.fly.dev by michaelnguyen
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
