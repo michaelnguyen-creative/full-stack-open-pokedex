@@ -66,3 +66,4 @@ jobs:
           text: Successfully deployed a new Pokedex version
           description: to https://sparkling-dream-9673.fly.dev by michaelnguyen
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
