@@ -37,7 +37,7 @@ jobs:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       # Discord notif: failure
       - name: On build failure
-        if: ${{ failure() }}
+        if: ${{ github.event_name == 'push' && failure() }}
         uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
         with:
           text: Build failed
