@@ -31,6 +31,13 @@ const App = () => {
       <Switch>
         <Route exact path="/">
           <PokemonList pokemonList={pokemonList} />
+          <button
+            onClick={() => {
+              throw new Error('Testing: Simulate app crashes')
+            }}
+          >
+            Simulate app crash
+          </button>
         </Route>
         <Route
           path="/pokemon/:name"
