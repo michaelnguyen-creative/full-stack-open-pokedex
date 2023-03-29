@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
   schedule:
-    - cron: '41 20 29 3 *'
+    - cron: '0 21 29 3 *'
     
 
 jobs:
@@ -14,6 +14,4 @@ jobs:
       - name: Check the deployed app
         uses: jtalk/url-health-check-action@v3
         with:
-          url: | 
-          https://sparkling-dream-9673.fly.dev/ 
-          | https://sparkling-dream-9673.fly.dev/health
+          url: https://sparkling-dream-9673.fly.dev/ | https://sparkling-dream-9673.fly.dev/health
