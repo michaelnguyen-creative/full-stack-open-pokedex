@@ -5,9 +5,10 @@ on:
     branches: [master]
 
 jobs:
-  runs-on: ubuntu-20.04
-  steps:
-    - name: Check the deployed app
-      uses: jtalk/url-health-check-action@v3
-      with:
-        url: https://sparkling-dream-9673.fly.dev/
+  periodic_health_check:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check the deployed app
+        uses: jtalk/url-health-check-action@v3
+        with:
+          url: https://sparkling-dream-9673.fly.dev/
