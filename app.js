@@ -13,5 +13,7 @@ app.get('/health', (_req, res) => {
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log('server started on port 8080')
-  throw new Error('Testing: Simulate app crashes')
+  setTimeout(() => {
+    throw new Error('Testing: Simulate app crashes')
+  }, 20000)
 })
