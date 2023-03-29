@@ -15,42 +15,42 @@ jobs:
   linting_testing_deployment:
     runs-on: ubuntu-20.04
     steps:
-      # - uses: actions/checkout@v3
-      # - uses: actions/setup-node@v3
-      #   with:
-      #     node-version: '16'
-      # - name: Install dependencies
-      #   run: npm i
-      # - name: lint
-      #   run: npm run eslint
-      # - name: build
-      #   run: npm run build
-      # - run: npm run test
-      # - name: e2e tests
-      #   uses: cypress-io/github-action@v5
-      #   with:
-      #     command: npm run test:e2e
-      #     start: npm run start-prod
-      #     wait-on: http://localhost:8080
-      # - uses: superfly/flyctl-actions/setup-flyctl@master
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm i
+      - name: lint
+        run: npm run eslint
+      - name: build
+        run: npm run build
+      - run: npm run test
+      - name: e2e tests
+        uses: cypress-io/github-action@v5
+        with:
+          command: npm run test:e2e
+          start: npm run start-prod
+          wait-on: http://localhost:8080
+      - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy app to fly.io
+        # env:
+        #   GITHUB_MESSAGE: ${{ toJson(github) }}
+        # run: echo "$GITHUB_MESSAGE" ${{ contains(toJSON(github.event.commits), '#skip') }}
+        if: ${{ github.event_name == 'push' && !contains(toJson(github.event.commits.*.message), '#skip') }}
+        run: flyctl deploy --remote-only
+  tag_release:
+    if: ${{ github.event_name == 'push' && !contains(toJson(github.event.commits.*.message), '#skip') }}
+    needs: [linting_testing_deployment]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - name: Bump version & push tag
+        uses: anothrNick/github-tag-action@1.61.0
         env:
-          GITHUB_MESSAGE: ${{ toJson(github) }}
-        run: echo "$GITHUB_MESSAGE" ${{ contains(toJSON(github.event.commits), '#skip') }}
-  #       if: ${{ github.event_name == 'push' && !contains(github.event.commits.*.message, '#skip') }}
-  #       run: flyctl deploy --remote-only
-  # tag_release:
-  #   if: ${{ github.event_name == 'push' && !contains(github.event.commits.*.message, '#skip') }}
-  #   needs: [linting_testing_deployment]
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: '0'
-  #     - name: Bump version & push tag
-  #       uses: anothrNick/github-tag-action@1.61.0
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         DEFAULT_BUMP: 'patch'
-  #         WITH_V: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: 'patch'
+          WITH_V: true
           # DRY_RUN: true
